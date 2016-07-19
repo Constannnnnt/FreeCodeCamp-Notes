@@ -16,24 +16,26 @@ If either argument isn't a valid number, return undefined.
 ### Code
 
 ```javascript
-
 function addTogether() {
-  var alen = arguments.length;
-  if ((typeof(arguments[0]) !== "number") || (typeof(arguments[1]) !== "number")) {
-    return undefined;
-  }
+  var args = Array.prototype.slice.call(arguments);
+  var alen = args.length;
   if (alen === 2) {
-    return arguments[0] + arguments[1];
+    if ((typeof args[0] !== "number") || (typeof args[1] !== "number")) return undefined;
+    return args[0] + args[1];
   }
   else {
-    return function(w) {
-      if (typeof(w) !== "number") return undefined;
-      return arguments[0]+w;
+    if (typeof args[0] !== "number") return undefined;
+    return function(temp) {
+      if ((typeof temp  === "number") && (typeof args[0]  === "number")) return args[0]+temp;
+      return undefined;
     };
   }
 }
-
 addTogether(2,3);
+// addTogether(2)(3) should return 5.
+// addTogether("http://bit.ly/IqT6zt") should return undefined.
+// addTogether(2, "3") should return undefined.
+// addTogether(2)([3]) should return undefined.
 
 ```
 
